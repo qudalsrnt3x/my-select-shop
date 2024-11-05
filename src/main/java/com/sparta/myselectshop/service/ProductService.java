@@ -106,4 +106,13 @@ public class ProductService {
         // 저장
         productFolderRepository.save(new ProductFolder(findProduct, findFolder));
     }
+
+    @Transactional(readOnly = true)
+    public Page<ProductResponseDto> getProductsInFolder(Long folderId, SearchParameter parameter, User user) {
+        Sort sort = Sort.by(parameter.getSort(), parameter.getSortBy());
+        Pageable pageable = PageRequest.of(parameter.getPage(), parameter.getSize(), sort);
+
+        Page<Product> products = productRepository.findAllByUserAndProductFolderList_FolderId(user, folderId, pageable);
+        return products.map(ProductResponseDto::new);
+    }
 }

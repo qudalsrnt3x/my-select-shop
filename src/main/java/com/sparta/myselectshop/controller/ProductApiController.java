@@ -29,11 +29,18 @@ public class ProductApiController {
     }
 
     // 관심 상품 조회하기
-    // 관심 상품 조회하기
     @GetMapping("/products")
     public Page<ProductResponseDto> getProducts(@ModelAttribute SearchParameter parameter,
                                                 @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return productService.getProducts(userDetails.getUser(), parameter);
+    }
+
+    // 회원이 등록한 폴더 내 모든 상품 조회
+    @GetMapping("/folders/{folderId}/products")
+    public Page<ProductResponseDto> getProductsInFolder(@PathVariable Long folderId,
+                                                        @ModelAttribute SearchParameter parameter,
+                                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return productService.getProductsInFolder(folderId, parameter, userDetails.getUser());
     }
 
     // 관심 상품 희망 최저가 등록하기
