@@ -4,6 +4,7 @@ import com.sparta.myselectshop.dto.ProductMypriceRequestDto;
 import com.sparta.myselectshop.dto.ProductRequestDto;
 import com.sparta.myselectshop.dto.ProductResponseDto;
 import com.sparta.myselectshop.entity.Product;
+import com.sparta.myselectshop.entity.User;
 import com.sparta.myselectshop.naver.dto.ItemDto;
 import com.sparta.myselectshop.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,14 +37,14 @@ public class ProductService {
         return new ProductResponseDto(product);
     }
 
-    public ProductResponseDto createProduct(ProductRequestDto requestDto) {
-        Product product = productRepository.save(new Product(requestDto));
+    public ProductResponseDto createProduct(ProductRequestDto requestDto, User user) {
+        Product product = productRepository.save(new Product(requestDto, user));
         return new ProductResponseDto(product);
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponseDto> getProducts() {
-        List<Product> products = productRepository.findAll();
+    public List<ProductResponseDto> getProducts(User user) {
+        List<Product> products = productRepository.findAllByUser(user);
         return products.stream().map(ProductResponseDto::new).toList();
     }
 
@@ -53,5 +54,10 @@ public class ProductService {
                 () -> new NullPointerException("해당 상품은 존재하지 않습니다.")
         );
         product.updateByItemDto(itemDto);
+    }
+
+    public List<ProductResponseDto> getAllProducts() {
+        List<Product> products = productRepository.findAll();
+        return products.stream().map(ProductResponseDto::new).toList();
     }
 }
