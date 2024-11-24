@@ -33,7 +33,7 @@ public class FolderService {
                 Folder saveFolder = new Folder(name, user);
                 folderList.add(saveFolder);
             } else {
-                throw new IllegalArgumentException("폴더명이 중복되었습니다.");
+                throw new IllegalArgumentException("중복된 폴더명을 제거해 주세요! 폴더명: " + name);
             }
         });
 
